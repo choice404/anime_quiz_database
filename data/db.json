@@ -71,6 +71,36 @@
       "fandom": "Darling in The Franxxx",
       "difficulty": "easy",
       "id": 3
+    },
+    {
+      "question": "test",
+      "answer": "test",
+      "questionType": "text",
+      "category": "test",
+      "tags": [],
+      "fandom": "test",
+      "difficulty": "easy",
+      "id": 4
+    },
+    {
+      "question": "test",
+      "answer": "test",
+      "questionType": "text",
+      "category": "test",
+      "tags": [],
+      "fandom": "test",
+      "difficulty": "medium",
+      "id": 5
+    },
+    {
+      "question": "test",
+      "answer": "test",
+      "questionType": "text",
+      "category": "test",
+      "tags": [],
+      "fandom": "test",
+      "difficulty": "hard",
+      "id": 6
     }
   ],
   "categories": [
@@ -89,6 +119,24 @@
       "description": "testing",
       "tags": [],
       "id": 2
+    },
+    {
+      "name": " anime dogs",
+      "description": "Guess the name of the anime dog from the picture",
+      "tags": [
+        "dogs",
+        "anime",
+        "weeb",
+        "animal",
+        "animeanimals"
+      ],
+      "id": 3
+    },
+    {
+      "name": "extra",
+      "description": "extra",
+      "tags": [],
+      "id": 4
     }
   ]
 }

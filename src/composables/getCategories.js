@@ -1,15 +1,17 @@
 import { ref } from 'vue'
+import { projectFirestore } from '../firebase/config'
+
 const getCategories = () => {
     const categories = ref([])
     const cError = ref(null)
 
     const cLoad = async () => {
         try{
-            let data = await fetch('http://localhost:3000/categories')
-            if(!data.ok) {
-                throw Error('no data available')
-            }
-            categories.value = await data.json()
+            const res = await projectFirestore.collection('categories').orderBy('createdAt', 'desc').get()
+
+            categories.value = res.docs.map(doc => {
+                return { ...doc.data(), id: doc.id }
+            })
         }
         catch(err) {
             cError.value = err.message

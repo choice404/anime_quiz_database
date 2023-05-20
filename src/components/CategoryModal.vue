@@ -3,7 +3,7 @@
         <div class="modal">
             <slot>
                 <div v-for="cat in categories" :key="cat.id">
-                    <CategorySingle :category="cat" @select="selectCategory" />
+                    <CategorySingle :createListBool="createList" :category="cat" @select="selectCategory" />
                 </div>
             </slot>
         </div>
@@ -14,24 +14,27 @@
 import { onMounted, onUnmounted, onUpdated } from 'vue'
 import CategorySingle from './CategorySingle.vue'
 export default {
-    props: ['categories'],
+    props: ['categories', 'createListBool'],
     components: { CategorySingle },
     setup(props, { emit }) {
+        const createList = props.createListBool
+
         const closeCategory = () => {
             emit('close')
         }
 
-        const selectCategory = (newCat) => {
-            emit('select', newCat)
+        const selectCategory = (newCat, newCatId) => {
+            emit('select', newCat, newCatId)
         }
 
-        onMounted(() => console.log('component mounted'))
+        onMounted(() => console.log('component mounted '))
         onUnmounted(() => console.log('component unmounted'))
         onUpdated(() => console.log('component updated'))
 
         return {
             closeCategory,
-            selectCategory
+            selectCategory,
+            createList
         }
     }
 }

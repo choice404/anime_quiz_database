@@ -11,13 +11,25 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import CategoryForm from '../components/CategoryForm.vue'
 import QuestionForm from '../components/QuestionForm.vue'
+import getUser from '@/composables/getuser';
+import { useRouter } from 'vue-router';
 export default {
     components: { CategoryForm, QuestionForm },
     setup() {
         const formToggle = ref(true);
+
+        const { user } = getUser()
+        const router = useRouter()
+
+        watch(user, () => {
+            if(!user.value)
+            {
+                router.push({ name: 'SignIn' })
+            }
+        })
 
         const changeForm = () => {
             formToggle!= formToggle

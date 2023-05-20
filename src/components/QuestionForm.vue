@@ -1,7 +1,7 @@
 <template>
     <div class="create">
-        <CategoryModal :categories="categories" v-if="showModal" @close="hideCategories" @select="selectCategory" />
-        <form @submit.prevent="handleSubmit">
+        <CategoryModal :categories="categories" :createListBool="true" v-if="showModal" @close="hideCategories" @select="selectCategory" />
+        <form @submit="handleSubmit">
             <label>Question:</label>
             <input type="text" v-model="question" required>
 
@@ -37,7 +37,9 @@
             <div class="submit">
                 <button>Submit</button>
             </div>
+            <!-- <h1>{{ catId }}</h1> -->
         </form>
+        <br>
     </div>
 </template>
 
@@ -47,6 +49,7 @@ import getQuestions from '../composables/getQuestions'
 import getCategories from '../composables/getCategories'
 import { useRouter } from 'vue-router';
 import CategoryModal from './CategoryModal.vue'
+import { projectFirestore, timestamp } from '@/firebase/config';
 
 export default {
     components: { CategoryModal },
@@ -69,6 +72,7 @@ export default {
         const showCatError = ref(false);
         const catError = ref('')
         const questionType = ref('text')
+        const catId = ref('')
 
         const router = useRouter()
         console.log(router)
@@ -78,9 +82,10 @@ export default {
             console.log("Showing modal")
         }
 
-        const selectCategory = (newCat) => {
+        const selectCategory = (newCat, newCatId) => {
             showModal.value = false
             cat.value = newCat
+            catId.value = newCatId
         }
 
         const hideCategories = () => {
@@ -89,8 +94,8 @@ export default {
 
         const handleKeydown = () => {
             if(!tags.value.includes(tag.value)) {
-                tag.value = tag.value.replace(/\s/, '')
-                tags.value.push(tag.value)
+                tag.value = tag.value.replace(/\s/g, '')
+                tags.value.push(tag.value.toLowerCase())
             }
             tag.value = ''
         }
@@ -109,20 +114,18 @@ export default {
 
             else{
                 const post = {
-                    question: question.value,
-                    answer: answer.value,
+                    question: question.value.toLowerCase(),
+                    answer: answer.value.toLowerCase(),
                     questionType:  questionType.value,
                     category: cat.value,
+                    categoryId: catId.value,
                     tags: tags.value,
-                    fandom: fandom.value,
-                    difficulty: difficulty.value
+                    fandom: fandom.value.toLowerCase(),
+                    difficulty: difficulty.value,
+                    createdAt: timestamp()
                 }
 
-                await fetch('http://localhost:3000/questions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(post)
-                })
+                const res = await projectFirestore.collection('questions').add(post)
             }
         }
         
@@ -147,7 +150,8 @@ export default {
             selectCategory,
             catError,
             showCatError,
-            questionType
+            questionType,
+            catId,
         }
     }
 

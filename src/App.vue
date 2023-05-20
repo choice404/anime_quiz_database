@@ -26,7 +26,7 @@ header h1 {
   font-size: 4rem;
 }
 
-header a {
+header a, header span {
   font-family: 'bebas neue';
   color: #444;
   text-decoration: none;

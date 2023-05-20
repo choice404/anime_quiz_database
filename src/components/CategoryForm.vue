@@ -23,6 +23,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import getCategories from '../composables/getCategories'
+import { projectFirestore, timestamp } from '@/firebase/config';
+
 export default {
     components: {},
     setup() {
@@ -43,8 +45,8 @@ export default {
 
         const handleKeydown = () => {
             if(!tags.value.includes(tag.value)) {
-                tag.value = tag.value.replace(/\s/, '')
-                tags.value.push(tag.value)
+                tag.value = tag.value.replace(/\s/g, '')
+                tags.value.push(tag.value.toLowerCase())
             }
             tag.value = ''
         }
@@ -63,19 +65,20 @@ export default {
             else if(!duplicate) {
                 showError.value = false;
                 const post = {
-                    name: name.value,
+                    name: name.value.toLowerCase(),
                     description: description.value,
                     tags: tags.value,
+                    createdAt: timestamp()
                 }
 
-                await fetch('http://localhost:3000/categories', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(post)
-                })
+                const res = await projectFirestore.collection('categories').add(post)
+                name.value = ''
+                description.value = ''
+                tag.value = ''
+                tags.value = []
             }
 
-            cLoad()
+            // cLoad()
         }
         
         return {
